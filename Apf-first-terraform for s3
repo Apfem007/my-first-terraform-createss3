@@ -13,7 +13,7 @@ provider "aws" {
 }
 
 resource "aws_s3_bucket" "my_bucket" {
-  bucket = "apfclass2assones3" # must be globally unique
+  bucket = "apfclass2assones4" # must be globally unique
 
   tags = {
     Name        = "MyBucket"
