@@ -1,0 +1,51 @@
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.0"
+    }
+  }
+  required_version = ">= 1.5.0"
+}
+
+provider "aws" {
+  region = "eu-west-2" # change to your preferred region
+}
+
+resource "aws_s3_bucket" "my_bucket" {
+  bucket = "apfclass2assones3" # must be globally unique
+
+  tags = {
+    Name        = "MyBucket"
+    Environment = "Dev"
+  }
+}
+
+# Optional but recommended: versioning
+resource "aws_s3_bucket_versioning" "my_bucket_versioning" {
+  bucket = aws_s3_bucket.my_bucket.id
+  versioning_configuration {
+    status = "disabled"
+  }
+}
+
+# Optional but recommended: block public access
+resource "aws_s3_bucket_public_access_block" "my_bucket_block" {
+  bucket = aws_s3_bucket.my_bucket.id
+
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+}
+
+# Optional: server-side encryption
+resource "aws_s3_bucket_server_side_encryption_configuration" "my_bucket_encryption" {
+  bucket = aws_s3_bucket.my_bucket.id
+
+  rule {
+    apply_server_side_encryption_by_default {
+      sse_algorithm = "AES256"
+    }
+  }
+}
